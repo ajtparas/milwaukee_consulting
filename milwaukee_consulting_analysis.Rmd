@@ -1,0 +1,26 @@
+---
+title: "Milwaukee_Consulting"
+author: "Aldrich Paras"
+date: "9/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#upload data
+load("consulting_data.RData")
+```
+
+```{r}
+#exploratory data analysis
+par(mfrow = c(2,2))
+hist(final$KITCHEN_CT)
+hist(final$FULL_BATH_CT)
+hist(final$HALF_BATH_CT)
+plot(final$FINISHED_AREA,final$SALE_PRICE)
+  
+```
+
