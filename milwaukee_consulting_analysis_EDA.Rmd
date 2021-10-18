@@ -1,0 +1,137 @@
+---
+title: "Milwaukee_Consulting"
+author: "Aldrich Paras"
+date: "9/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#upload data
+load("consulting_data.RData")
+View(final)
+```
+
+```{r}
+# change character variables to factor, then to numeric based on ordered levels
+
+# change building type, ordered by number
+final$BLD_TYPE_NUM <- as.numeric(factor(final$BLD_TYPE, levels = c("01 - Ranch","02 - Bi-Level","03 - Split Level","04 - Cape Cod","05 - Colonial","06 - Tudor","07 - Townhouse","08 - Res O/S 2sty +","09 - Mansion","10 - Cottage","11 - Duplex O/S","12 - Duplex N/S","13 - Duplex-Cottage","14 - Multiple Residential Bldgs","15 - Triplex","16 - Contemporary","17 - Res O/S 1 Story","18 - Milwaukee Bungalow","19 - Res O/S A & 1/2","22 - Dplx Bungalow"), ordered = TRUE))
+
+# Appraiser, ordered by alphabet
+final$APPRAISER_NUM <- as.numeric(factor(final$APPRAISER,levels = c("ESS - Mike Esser","GRA - Angela Granger","HER - David Hernandez","HRN - Vicente Hernandez","JOH - Derrick Johns","KAE - Jody Kaebisch","KOH - Ben Kohout","LOP - Angie Lopez","MAC - Rick Macek","OCO - Paul O'Connell","OLG - Noah Olguin","REI - Scott Reiske","STR - Crystal Strong","TAY - Bart Taylor","WIL - Pamela Williams")))
+
+# NBHD by order
+final$NBHD_NUM <- as.numeric(as.factor(final$NBHD))
+
+# QUAL by order
+final$QUAL_NUM <- as.numeric(factor(final$QUAL, levels = c("AA - AA","AA- - AA-","A+ - A+","A - A","A- - A-","B+ - B+","B - B","B- - B-","C+ - C+","C - C","C- - C-","D+ - D+","D - D","D- - D-","E+ - E+","E - E","E- - E-","M&S 2 - Average",""), ordered = TRUE))
+
+# COND by order
+final$COND_NUM <- as.numeric(factor(final$COND, levels = c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor","VP - Very Poor","UN - Unsound","")))
+
+# KITCHEN_RATING by Order
+final$KITCHEN_RATING_NUM <- as.numeric(factor(final$KITCHEN_RATING, levels = c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor","VP - Very Poor","UN - Unsound","")))
+
+# FULL_BATH_RATING by Order
+final$FULL_BATH_RATING_NUM <- as.numeric(factor(final$FULL_BATH_RATING, levels = c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor","VP - Very Poor","UN - Unsound","")))
+
+# HALF_BATH_RATING by Order
+final$HALF_BATH_RATING_NUM <- as.numeric(factor(final$HALF_BATH_RATING, levels = c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor","VP - Very Poor","UN - Unsound","")))
+
+```
+
+
+```{r}
+#subsetting dataframe based on appealed or not
+
+# Properties appealed either 2019 OR 2020 OR 2021
+appealed_Full <- final[which(final$APPEALED19 == TRUE | final$APPEALED20 == TRUE | final$APPEALED21 == TRUE),]
+
+# Properties appealed in 2021 - 517 observations
+appealed_2021 <- final[which(final$APPEALED21 == TRUE),]
+
+
+
+# Properties from any year that have a sale price
+house_Sold <- subset(final, (!is.na(final$SALE_PRICE)))
+
+```
+
+
+```{r}
+# Exploratory Data Analysis
+library(ggplot2)
+
+#Building type counts
+ggplot(final, aes(x = BLD_TYPE))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+#Appraiser Counts
+ggplot(final, aes(x = APPRAISER))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# NBHD Counts
+ggplot(final, aes(x = NBHD))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# Qual Counts
+ggplot(final, aes(x = QUAL))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# COND Counts
+ggplot(final, aes(x = COND))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# KITCHEN counts
+ggplot(final, aes(x = KITCHEN_CT))+ geom_histogram(stat = "count", fill = "tomato2")
+
+# Kitchen Rating counts
+ggplot(final, aes(x = KITCHEN_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# Full Bath Counts
+ggplot(final, aes(x = FULL_BATH_CT))+ geom_histogram(stat = "count", fill = "tomato2")
+
+# Full Bath Ratings
+ggplot(final, aes(x = FULL_BATH_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# Half Bath Counts
+ggplot(final, aes(x = HALF_BATH_CT))+ geom_histogram(stat = "count", fill = "tomato2")
+
+# Half Bath Ratings
+ggplot(final, aes(x = HALF_BATH_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# Year Built Counts
+ggplot(final, aes(x = YEAR_BUILT))+ geom_histogram(stat = "count", fill = "tomato2")+ xlim(1850,2021)
+
+# Finished Area Counts
+ggplot(final, aes(x = FINISHED_AREA))+ geom_histogram(stat = "count", fill = "tomato2") + xlim(0, 12059) + ylim(0,100)
+
+# Land_SF counts
+ggplot(final, aes(x = LAND_SF))+ geom_histogram(stat = "count", fill = "tomato2") + xlim(4000, 10000)+ ylim(0,100)
+summary(final$LAND_SF)
+
+# Houses Appealed in 2019
+ggplot(final, aes(x = APPEALED19))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# Houses Appealed in 2020
+ggplot(final, aes(x = APPEALED20))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+
+# Houses Appealed in 2021
+ggplot(final, aes(x = APPEALED21))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+```
+
+
+```{r}
+# Further Exploratory Data Aanalysis
+
+summary(final)
+```
+
+```{r}
+# correlation matrix of variables
+
+pairs(~ PROP_ID + BLD_TYPE_NUM + APPRAISER_NUM + NBHD_NUM + QUAL_NUM + COND_NUM + KITCHEN_CT + KITCHEN_RATING_NUM + FULL_BATH_CT + FULL_BATH_RATING_NUM + HALF_BATH_CT + HALF_BATH_RATING_NUM + YEAR_BUILT + FINISHED_AREA + LAND_SF + SALE_PRICE, data = final)
+
+```
+
+
+
