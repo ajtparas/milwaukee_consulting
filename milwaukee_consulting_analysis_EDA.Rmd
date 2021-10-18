@@ -67,56 +67,55 @@ house_Sold <- subset(final, (!is.na(final$SALE_PRICE)))
 library(ggplot2)
 
 #Building type counts
-ggplot(final, aes(x = BLD_TYPE))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = BLD_TYPE))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Building Types")
 
 #Appraiser Counts
-ggplot(final, aes(x = APPRAISER))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = APPRAISER))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Appraiser")
 
 # NBHD Counts
-ggplot(final, aes(x = NBHD))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = NBHD))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Neighborhood")
 
 # Qual Counts
-ggplot(final, aes(x = QUAL))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = QUAL))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Quality")
 
 # COND Counts
-ggplot(final, aes(x = COND))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = COND))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Condition")
 
 # KITCHEN counts
-ggplot(final, aes(x = KITCHEN_CT))+ geom_histogram(stat = "count", fill = "tomato2")
+ggplot(final, aes(x = KITCHEN_CT))+ geom_histogram(stat = "count", fill = "tomato2")+ggtitle("Kitchen Counts")
 
 # Kitchen Rating counts
-ggplot(final, aes(x = KITCHEN_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = KITCHEN_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Kitchen Ratings")
 
 # Full Bath Counts
-ggplot(final, aes(x = FULL_BATH_CT))+ geom_histogram(stat = "count", fill = "tomato2")
+ggplot(final, aes(x = FULL_BATH_CT))+ geom_histogram(stat = "count", fill = "tomato2")+ggtitle("Full Bath Counts")
 
 # Full Bath Ratings
-ggplot(final, aes(x = FULL_BATH_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = FULL_BATH_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Full Bath Ratings")
 
 # Half Bath Counts
-ggplot(final, aes(x = HALF_BATH_CT))+ geom_histogram(stat = "count", fill = "tomato2")
+ggplot(final, aes(x = HALF_BATH_CT))+ geom_histogram(stat = "count", fill = "tomato2")+ggtitle("Half Bath Counts")
 
 # Half Bath Ratings
-ggplot(final, aes(x = HALF_BATH_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = HALF_BATH_RATING))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Half Bath Ratings")
 
 # Year Built Counts
-ggplot(final, aes(x = YEAR_BUILT))+ geom_histogram(stat = "count", fill = "tomato2")+ xlim(1850,2021)
+ggplot(final, aes(x = YEAR_BUILT))+ geom_histogram(stat = "count", fill = "tomato2")+ xlim(1850,2021)+ggtitle("Year Built")
 
 # Finished Area Counts
-ggplot(final, aes(x = FINISHED_AREA))+ geom_histogram(stat = "count", fill = "tomato2") + xlim(0, 12059) + ylim(0,100)
+ggplot(final, aes(x = FINISHED_AREA))+ geom_histogram(stat = "count", fill = "tomato2") + xlim(0, 12059) + ylim(0,100)+ggtitle("Finished Area")
 
 # Land_SF counts
-ggplot(final, aes(x = LAND_SF))+ geom_histogram(stat = "count", fill = "tomato2") + xlim(4000, 10000)+ ylim(0,100)
-summary(final$LAND_SF)
+ggplot(final, aes(x = LAND_SF))+ geom_histogram(stat = "count", fill = "tomato2") + xlim(4000, 10000)+ ylim(0,100) +ggtitle("Land Square Feet")
 
 # Houses Appealed in 2019
-ggplot(final, aes(x = APPEALED19))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = APPEALED19))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Appealed 2019")
 
 # Houses Appealed in 2020
-ggplot(final, aes(x = APPEALED20))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = APPEALED20))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Appealed 2020")
 
 # Houses Appealed in 2021
-ggplot(final, aes(x = APPEALED21))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+ggplot(final, aes(x = APPEALED21))+ geom_histogram(stat = "count", fill = "tomato2")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()+ggtitle("Appealed 2021")
 ```
 
 
