@@ -1,0 +1,109 @@
+---
+title: "Imputation"
+author: "Hannah Harrach"
+date: "10/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#upload data
+load("consulting_data.RData")
+View(final)
+```
+
+```{r}
+#Denote variables as categorical, ordinal, or numerical
+
+  #Categorical
+final$PROP_ID<-factor(final$PROP_ID)
+final$BLD_TYPE<-factor(final$BLD_TYPE)
+final$APPRAISER <-factor(final$APPRAISER)
+final$NBHD <-factor(final$NBHD)
+
+  #Ordinal 
+#Treat M$S 2 - Average as missing (per Colin's request)
+library(naniar)
+final<-replace_with_na(data=final, replace = list(QUAL= "M&S 2 - Average"))
+final$QUAL<-factor(final$QUAL, levels = c("AA - AA",  "AA- - AA-", "A+ - A+","A - A", "A- - A-","B+ - B+","B - B", "B- - B-" , "C+ - C+", "C - C", "C- - C-" , "D+ - D+", "D - D" ,"D- - D-", "E+ - E+", "E - E", "E- - E-"))
+final$COND<-factor(final$COND, levels=c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor", "VP - Very Poor","UN - Unsound"))
+final$KITCHEN_RATING<-factor(final$KITCHEN_RATING,levels=c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor", "VP - Very Poor","UN - Unsound"))
+final$FULL_BATH_RATING<-factor(final$FULL_BATH_RATING, levels=c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor", "VP - Very Poor","UN - Unsound"))
+final$HALF_BATH_RATING<-factor(final$HALF_BATH_RATING, levels=c("EX - Excellent","VG - Very Good","GD - Good","AV - Average","FR - Fair","PR - Poor", "VP - Very Poor","UN - Unsound"))
+
+  #Discrete Numerical
+final$KITCHEN_CT<-factor(final$KITCHEN_CT)
+final$FULL_BATH_CT<-factor(final$FULL_BATH_CT)
+final$HALF_BATH_CT<-factor(final$HALF_BATH_CT)
+```
+
+```{r}
+#Treat N/A in HALF_BATH_CT as 0 (per Colin's request)
+final$HALF_BATH_CT[is.na(final$HALF_BATH_CT)]=0
+
+#Treat values of zero as missing (per Colin's request)
+library(naniar)
+final<-replace_with_na(data=final, replace = list(SALE_PRICE= 0))
+final<-replace_with_na(data=final, replace = list(LAND_SF= 0))
+final<-replace_with_na(data=final, replace = list(KITCHEN_CT= 0))
+final<-replace_with_na(data=final, replace = list(FULL_BATH_CT= 0))
+final<-replace_with_na(data=final, replace = list(YEAR_BUILT= 0))
+final<-replace_with_na(data=final, replace = list(FINISHED_AREA= 0))
+```
+ 
+#Missing data summary 
+  #QUAL-9 missing values
+  #COND-2 missing values
+  #KITCHEN_CT-2 missing values
+  #KITCHEN_RATING-94 missing values
+  #FULL_BATH_CT-256 missing values
+  #FULL_BATH_RATING-94 missing values
+  #HALF_BATH_RATING-43 missing values
+  #YEAR_BUILT-2 missing values
+  #FINISHED_AREA-3 missing values
+  #LAND_SF-5 missing values 
+
+```{r}
+#Create factor "N/A - Not Applicable" for HALF_BATH_RATING
+levels(final$HALF_BATH_RATING) <- c(levels(final$HALF_BATH_RATING), "N/A - Not Applicable")
+
+#Assign HALF_BATH_RATING of "N/A - Not Applicable" to properties with no half baths 
+final$HALF_BATH_RATING[final$HALF_BATH_CT==0]<-"N/A - Not Applicable"
+``` 
+
+```{r}
+#Imputation
+
+#Performing conditional mean imputation for each variable
+library(mice)
+imp<-mice(imputationdata, m=1, maxit=1, method="cart")
+```
+
+```{r}
+#Completing the data with the imputation
+completeddata<-complete(imp,1)
+```
+
+```{r}
+#Replacing the data in the data set with the completed data columns 
+
+final$QUAL<-completeddata$QUAL
+final$COND<-completeddata$COND
+final$KITCHEN_CT<-completeddata$KITCHEN_CT
+final$KITCHEN_RATING<-completeddata$KITCHEN_RATING
+final$FULL_BATH_CT<-completeddata$FULL_BATH_CT
+final$FULL_BATH_RATING<-completeddata$FULL_BATH_RATING
+final$HALF_BATH_RATING<-completeddata$HALF_BATH_RATING
+final$YEAR_BUILT<-completeddata$YEAR_BUILT
+final$FINISHED_AREA<-completeddata$FINISHED_AREA
+final$LAND_SF<-completeddata$LAND_SF
+
+summary(is.na(final))
+``` 
+
+```{r}
+write.csv(final,"Macintosh HD:\\Users\\hannahharrach\\Desktop\\Data Consulting\\Group Project\\Data and Data Dictionary\\imputeddata.csv", row.names = FALSE)
+```
