@@ -1,0 +1,43 @@
+---
+title: "Feature Importance"
+author: "Aldrich Paras"
+date: "11/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+final <- read.csv("imputeddatafinal.csv")
+```
+
+```{r}
+final$BLD_TYPE <- as.factor(final$BLD_TYPE)
+final$APPRAISER <- as.factor(final$APPRAISER)
+final$NBHD <- as.factor(final$NBHD)
+final$QUAL <- as.factor(final$QUAL)
+final$COND <- as.factor(final$COND)
+final$KITCHEN_RATING <- as.factor(final$KITCHEN_RATING)
+final$HALF_BATH_RATING <- as.factor(final$HALF_BATH_RATING)
+final$FULL_BATH_RATING <- as.factor(final$FULL_BATH_RATING)
+
+```
+
+
+
+```{r}
+
+# Properties from any year that have a sale price
+house_Sold <- subset(final, (!is.na(final$SALE_PRICE)))
+
+
+library(gbm)
+
+model_gbm <- gbm(SALE_PRICE~.-PROP_ID-APPEALED19-APPEALED20-APPEALED21-SALE_DATE, distribution = "gaussian", n.trees = 1000, data = house_Sold)
+summary(model_gbm, las = 1,cex.name=0.7)
+
+```
+
+
